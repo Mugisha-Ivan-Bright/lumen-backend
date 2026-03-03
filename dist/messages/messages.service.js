@@ -1,0 +1,64 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MessagesService = void 0;
+const common_1 = require("@nestjs/common");
+const prisma_service_1 = require("../prisma/prisma.service");
+let MessagesService = class MessagesService {
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    sendMessage(senderId, receiverId, content) {
+        return this.prisma.message.create({
+            data: {
+                senderId,
+                receiverId,
+                content,
+            },
+        });
+    }
+    async getConversations(userId) {
+        const messages = await this.prisma.message.findMany({
+            where: {
+                OR: [{ senderId: userId }, { receiverId: userId }],
+            },
+            include: {
+                sender: true,
+                receiver: true,
+            },
+        });
+        const map = new Map();
+        for (const msg of messages) {
+            const other = msg.senderId === userId ? msg.receiver : msg.sender;
+            if (!map.has(other.id)) {
+                map.set(other.id, { userId: other.id, user: other });
+            }
+        }
+        return Array.from(map.values());
+    }
+    getConversation(userId, otherUserId) {
+        return this.prisma.message.findMany({
+            where: {
+                OR: [
+                    { senderId: userId, receiverId: otherUserId },
+                    { senderId: otherUserId, receiverId: userId },
+                ],
+            },
+            orderBy: { created_at: 'asc' },
+        });
+    }
+};
+exports.MessagesService = MessagesService;
+exports.MessagesService = MessagesService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+], MessagesService);
+//# sourceMappingURL=messages.service.js.map

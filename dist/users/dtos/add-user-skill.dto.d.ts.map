@@ -1,0 +1,1 @@
+{"version":3,"file":"add-user-skill.dto.d.ts","sourceRoot":"","sources":["../../../src/users/dtos/add-user-skill.dto.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,UAAU,EAAE,MAAM,gBAAgB,CAAC;AAE5C,qBAAa,eAAe;IAE1B,OAAO,EAAE,MAAM,CAAC;IAGhB,KAAK,EAAE,UAAU,CAAC;CACnB"}

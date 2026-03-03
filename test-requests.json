@@ -1,0 +1,326 @@
+[
+  {
+    "name": "Auth - Register",
+    "method": "POST",
+    "url": "http://localhost:3000/api/auth/register",
+    "body": {
+      "name": "Alice Example",
+      "email": "alice@example.com",
+      "password": "Password123!"
+    }
+  },
+  {
+    "name": "Auth - Login",
+    "method": "POST",
+    "url": "http://localhost:3000/api/auth/login",
+    "body": {
+      "email": "alice@example.com",
+      "password": "Password123!"
+    }
+  },
+  {
+    "name": "Auth - Me (requires Bearer token)",
+    "method": "GET",
+    "url": "http://localhost:3000/api/auth/me",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Auth - Refresh Token",
+    "method": "POST",
+    "url": "http://localhost:3000/api/auth/refresh-token",
+    "body": {
+      "refreshToken": "<REFRESH_TOKEN>"
+    }
+  },
+  {
+    "name": "Auth - Logout",
+    "method": "POST",
+    "url": "http://localhost:3000/api/auth/logout"
+  },
+  {
+    "name": "Auth - Verify Email",
+    "method": "GET",
+    "url": "http://localhost:3000/api/auth/verify-email?token=<VERIFICATION_TOKEN>"
+  },
+  {
+    "name": "Auth - Resend Verification Email",
+    "method": "POST",
+    "url": "http://localhost:3000/api/auth/resend-verification",
+    "body": {
+      "email": "alice@example.com"
+    }
+  },
+  {
+    "name": "Auth - Forgot Password",
+    "method": "POST",
+    "url": "http://localhost:3000/api/auth/forgot-password",
+    "body": {
+      "email": "alice@example.com"
+    }
+  },
+  {
+    "name": "Auth - Reset Password",
+    "method": "POST",
+    "url": "http://localhost:3000/api/auth/reset-password",
+    "body": {
+      "token": "<RESET_TOKEN>",
+      "newPassword": "NewPassword123!"
+    }
+  },
+  {
+    "name": "Users - Public Talent List",
+    "method": "GET",
+    "url": "http://localhost:3000/api/talent"
+  },
+  {
+    "name": "Users - Public Talent Profile",
+    "method": "GET",
+    "url": "http://localhost:3000/api/talent/1"
+  },
+  {
+    "name": "Users - Get User (private)",
+    "method": "GET",
+    "url": "http://localhost:3000/api/users/1",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Users - Update Profile (text fields only)",
+    "method": "PUT",
+    "url": "http://localhost:3000/api/users/profile",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    },
+    "body": {
+      "name": "Alice Updated"
+    }
+  },
+  {
+    "name": "Users - Update Availability",
+    "method": "PATCH",
+    "url": "http://localhost:3000/api/users/1/availability",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    },
+    "body": {
+      "availability_status": "busy"
+    }
+  },
+  {
+    "name": "Users - Update Avatar (file upload)",
+    "method": "PATCH",
+    "url": "http://localhost:3000/api/users/1/avatar",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>",
+      "Content-Type": "multipart/form-data"
+    },
+    "body": {
+      "file": "<attach local image file in your HTTP client>"
+    },
+    "notes": "Use multipart/form-data with a file field named 'file'. Backend will upload to Cloudinary and store the resulting public URL in the user's avatar."
+  },
+  {
+    "name": "Users - Add User Skill",
+    "method": "POST",
+    "url": "http://localhost:3000/api/users/skills",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    },
+    "body": {
+      "skillId": 1,
+      "level": "intermediate"
+    }
+  },
+  {
+    "name": "Users - Get User Skills",
+    "method": "GET",
+    "url": "http://localhost:3000/api/users/1/skills"
+  },
+  {
+    "name": "Users - Update User Skill",
+    "method": "PATCH",
+    "url": "http://localhost:3000/api/users/skills/1",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    },
+    "body": {
+      "level": "advanced"
+    }
+  },
+  {
+    "name": "Users - Delete User Skill",
+    "method": "DELETE",
+    "url": "http://localhost:3000/api/users/skills/1",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Admin - Create Skill",
+    "method": "POST",
+    "url": "http://localhost:3000/api/skills",
+    "headers": {
+      "Authorization": "Bearer <ADMIN_ACCESS_TOKEN>"
+    },
+    "body": {
+      "name": "TypeScript",
+      "description": "Strongly typed JavaScript"
+    }
+  },
+  {
+    "name": "Skills - Get All",
+    "method": "GET",
+    "url": "http://localhost:3000/api/skills"
+  },
+  {
+    "name": "Skills - Get By Id",
+    "method": "GET",
+    "url": "http://localhost:3000/api/skills/1"
+  },
+  {
+    "name": "Admin - Delete Skill",
+    "method": "DELETE",
+    "url": "http://localhost:3000/api/skills/1",
+    "headers": {
+      "Authorization": "Bearer <ADMIN_ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Projects - Create",
+    "method": "POST",
+    "url": "http://localhost:3000/api/projects",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    },
+    "body": {
+      "title": "LUMEN Portfolio Site",
+      "description": "A portfolio site for RCA students",
+      "skillId": 1
+    }
+  },
+  {
+    "name": "Projects - List",
+    "method": "GET",
+    "url": "http://localhost:3000/api/projects"
+  },
+  {
+    "name": "Projects - Get By Id",
+    "method": "GET",
+    "url": "http://localhost:3000/api/projects/1"
+  },
+  {
+    "name": "Projects - Update",
+    "method": "PATCH",
+    "url": "http://localhost:3000/api/projects/1",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    },
+    "body": {
+      "title": "LUMEN Portfolio Site v2",
+      "description": "Updated description",
+      "status": "active"
+    }
+  },
+  {
+    "name": "Projects - Delete",
+    "method": "DELETE",
+    "url": "http://localhost:3000/api/projects/1",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Projects - Join",
+    "method": "POST",
+    "url": "http://localhost:3000/api/projects/1/join",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Projects - Invite Member",
+    "method": "POST",
+    "url": "http://localhost:3000/api/projects/1/invite",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    },
+    "body": {
+      "userId": 2
+    }
+  },
+  {
+    "name": "Projects - Get Members",
+    "method": "GET",
+    "url": "http://localhost:3000/api/projects/1/members"
+  },
+  {
+    "name": "Projects - Add Comment",
+    "method": "POST",
+    "url": "http://localhost:3000/api/projects/1/comment",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    },
+    "body": {
+      "content": "This looks great!"
+    }
+  },
+  {
+    "name": "Projects - Get Comments",
+    "method": "GET",
+    "url": "http://localhost:3000/api/projects/1/comments"
+  },
+  {
+    "name": "Messages - Send",
+    "method": "POST",
+    "url": "http://localhost:3000/api/messages",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    },
+    "body": {
+      "receiverId": 2,
+      "content": "Hey, are you available for a project?"
+    }
+  },
+  {
+    "name": "Messages - Get Conversations",
+    "method": "GET",
+    "url": "http://localhost:3000/api/messages/conversations",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Messages - Get Conversation with User",
+    "method": "GET",
+    "url": "http://localhost:3000/api/messages/2",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Advisories - Create",
+    "method": "POST",
+    "url": "http://localhost:3000/api/advisories",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN>"
+    },
+    "body": {
+      "content": "Consider improving the onboarding flow.",
+      "projectId": 1
+    }
+  },
+  {
+    "name": "Advisories - Get User Advisories",
+    "method": "GET",
+    "url": "http://localhost:3000/api/users/1/advisories"
+  },
+  {
+    "name": "Metrics - Get User Stats",
+    "method": "GET",
+    "url": "http://localhost:3000/api/users/1/stats"
+  }
+]
+
