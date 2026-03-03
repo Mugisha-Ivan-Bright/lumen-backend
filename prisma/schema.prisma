@@ -1,0 +1,170 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum AvailabilityStatus {
+  available
+  busy
+  offline
+}
+
+enum UserRole {
+  user
+  admin
+  recruiter
+}
+
+enum SkillLevel {
+  beginner
+  intermediate
+  advanced
+  expert
+}
+
+enum ProjectStatus {
+  active
+  completed
+  archived
+}
+
+enum ProjectMemberRole {
+  member
+  admin
+}
+
+model User {
+  id                        Int                 @id @default(autoincrement())
+  name                      String
+  email                     String              @unique
+  password                  String
+  avatar                    String?
+  availability_status       AvailabilityStatus  @default(available)
+  role                      UserRole            @default(user)
+  is_verified               Boolean             @default(false)
+  verification_token        String?
+  verification_token_expires DateTime?
+  created_at                DateTime            @default(now())
+  updated_at                DateTime            @updatedAt
+
+  userSkills                UserSkill[]
+  projectsCreated           Project[]           @relation("ProjectsCreated")
+  projectMemberships        ProjectMember[]
+  projectComments           ProjectComment[]
+  messagesSent              Message[]           @relation("MessagesSent")
+  messagesReceived          Message[]           @relation("MessagesReceived")
+  advisories                Advisory[]
+  stats                     UserStats?
+}
+
+model Skill {
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  description String?
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+
+  userSkills  UserSkill[]
+  projects    Project[]
+}
+
+model UserSkill {
+  id         Int        @id @default(autoincrement())
+  level      SkillLevel @default(beginner)
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  skill   Skill @relation(fields: [skillId], references: [id])
+  skillId Int
+
+  @@unique([userId, skillId], name: "unique_user_skill")
+}
+
+model Project {
+  id          Int            @id @default(autoincrement())
+  title       String
+  description String?
+  status      ProjectStatus  @default(active)
+  created_at  DateTime       @default(now())
+  updated_at  DateTime       @updatedAt
+
+  created_by User   @relation("ProjectsCreated", fields: [createdById], references: [id])
+  createdById Int
+
+  skill    Skill?          @relation(fields: [skillId], references: [id])
+  skillId  Int?
+
+  members  ProjectMember[]
+  comments ProjectComment[]
+  advisories Advisory[]
+}
+
+model ProjectMember {
+  id         Int               @id @default(autoincrement())
+  role       ProjectMemberRole @default(member)
+  joined_at  DateTime          @default(now())
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  @@unique([projectId, userId], name: "unique_project_member")
+}
+
+model ProjectComment {
+  id         Int      @id @default(autoincrement())
+  content    String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId Int
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model Message {
+  id          Int      @id @default(autoincrement())
+  content     String
+  read_status Boolean  @default(false)
+  created_at  DateTime @default(now())
+
+  sender   User @relation("MessagesSent", fields: [senderId], references: [id])
+  senderId Int
+
+  receiver   User @relation("MessagesReceived", fields: [receiverId], references: [id])
+  receiverId Int
+}
+
+model Advisory {
+  id         Int      @id @default(autoincrement())
+  content    String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId Int?
+}
+
+model UserStats {
+  userId          Int  @id
+  total_projects  Int  @default(0)
+  total_skills    Int  @default(0)
+  total_advisories Int @default(0)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
