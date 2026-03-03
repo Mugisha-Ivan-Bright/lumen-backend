@@ -10,6 +10,8 @@ import { ProjectsModule } from './projects/projects.module';
 import { MessagesModule } from './messages/messages.module';
 import { AdvisoriesModule } from './advisories/advisories.module';
 import { MetricsModule } from './metrics/metrics.module';
+import { HiringModule } from './hiring/hiring.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { MetricsModule } from './metrics/metrics.module';
     MessagesModule,
     AdvisoriesModule,
     MetricsModule,
+    HiringModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -6,12 +6,14 @@ import { ResetPasswordDto } from './dtos/reset-password.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from '../email/email.service';
+import { NotificationsService } from '../notifications/notifications.service';
 export declare class AuthService {
     private readonly prisma;
     private readonly jwtService;
     private readonly configService;
     private readonly emailService;
-    constructor(prisma: PrismaService, jwtService: JwtService, configService: ConfigService, emailService: EmailService);
+    private readonly notificationsService;
+    constructor(prisma: PrismaService, jwtService: JwtService, configService: ConfigService, emailService: EmailService, notificationsService: NotificationsService);
     register(dto: RegisterDto): Promise<{
         accessToken: string;
         refreshToken: string;
@@ -29,6 +31,8 @@ export declare class AuthService {
         email: string;
         password: string;
         avatar: string | null;
+        created_at: Date;
+        id: number;
         availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
         role: import(".prisma/client").$Enums.UserRole;
         is_verified: boolean;
@@ -36,9 +40,7 @@ export declare class AuthService {
         verification_token_expires: Date | null;
         reset_password_token: string | null;
         reset_password_expires: Date | null;
-        created_at: Date;
         updated_at: Date;
-        id: number;
     }>;
     login(dto: LoginDto): Promise<{
         accessToken: string;
@@ -57,11 +59,11 @@ export declare class AuthService {
         name: string;
         email: string;
         avatar: string | null;
+        created_at: Date;
+        id: number;
         availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
         role: import(".prisma/client").$Enums.UserRole;
         is_verified: boolean;
-        created_at: Date;
-        id: number;
     } | null>;
     refreshToken(token: string): Promise<{
         accessToken: string;

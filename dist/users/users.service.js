@@ -12,9 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const notifications_service_1 = require("../notifications/notifications.service");
+const client_1 = require("@prisma/client");
+const email_service_1 = require("../email/email.service");
 let UsersService = class UsersService {
-    constructor(prisma) {
+    constructor(prisma, notificationsService, emailService) {
         this.prisma = prisma;
+        this.notificationsService = notificationsService;
+        this.emailService = emailService;
     }
     async getTalentList() {
         return this.prisma.user.findMany({
@@ -113,13 +118,23 @@ let UsersService = class UsersService {
         });
     }
     async addUserSkill(userId, dto) {
-        return this.prisma.userSkill.create({
+        const userSkill = await this.prisma.userSkill.create({
             data: {
                 userId,
                 skillId: dto.skillId,
                 level: dto.level,
             },
         });
+        const user = await this.prisma.user.findUnique({ where: { id: userId } });
+        const skill = await this.prisma.skill.findUnique({ where: { id: dto.skillId } });
+        if (user && skill) {
+            await this.notificationsService.createNotification(user.id, client_1.NotificationType.SKILL_ADDED, 'New skill added', `You added the skill ${skill.name}.`, { skillId: skill.id });
+            const emailAllowed = await this.notificationsService.isEmailEnabled(user.id);
+            if (emailAllowed) {
+                await this.emailService.sendSkillAddedEmail(user.email, skill.name);
+            }
+        }
+        return userSkill;
     }
     getUserSkills(userId) {
         return this.prisma.userSkill.findMany({
@@ -158,6 +173,8 @@ let UsersService = class UsersService {
 exports.UsersService = UsersService;
 exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        notifications_service_1.NotificationsService,
+        email_service_1.EmailService])
 ], UsersService);
 //# sourceMappingURL=users.service.js.map

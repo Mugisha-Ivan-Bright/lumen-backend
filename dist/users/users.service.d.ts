@@ -3,94 +3,98 @@ import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { UpdateAvailabilityDto } from './dtos/update-availability.dto';
 import { AddUserSkillDto } from './dtos/add-user-skill.dto';
 import { UpdateUserSkillDto } from './dtos/update-user-skill.dto';
+import { NotificationsService } from '../notifications/notifications.service';
+import { EmailService } from '../email/email.service';
 export declare class UsersService {
     private readonly prisma;
-    constructor(prisma: PrismaService);
+    private readonly notificationsService;
+    private readonly emailService;
+    constructor(prisma: PrismaService, notificationsService: NotificationsService, emailService: EmailService);
     getTalentList(): Promise<{
-        id: number;
         name: string;
-        role: import(".prisma/client").$Enums.UserRole;
         email: string;
         avatar: string | null;
+        id: number;
         availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
+        role: import(".prisma/client").$Enums.UserRole;
     }[]>;
     getTalentById(id: number): Promise<{
-        created_at: Date;
-        id: number;
         name: string;
-        role: import(".prisma/client").$Enums.UserRole;
         email: string;
         avatar: string | null;
+        created_at: Date;
+        id: number;
         availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
+        role: import(".prisma/client").$Enums.UserRole;
     }>;
     getUserById(id: number): Promise<{
-        created_at: Date;
-        updated_at: Date;
-        id: number;
         name: string;
-        role: import(".prisma/client").$Enums.UserRole;
         email: string;
         password: string;
         avatar: string | null;
+        created_at: Date;
+        id: number;
         availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
+        role: import(".prisma/client").$Enums.UserRole;
         is_verified: boolean;
         verification_token: string | null;
         verification_token_expires: Date | null;
         reset_password_token: string | null;
         reset_password_expires: Date | null;
+        updated_at: Date;
     }>;
     updateProfile(userId: number, dto: UpdateProfileDto): Promise<{
-        id: number;
         name: string;
-        role: import(".prisma/client").$Enums.UserRole;
         email: string;
         avatar: string | null;
+        id: number;
         availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
+        role: import(".prisma/client").$Enums.UserRole;
     }>;
     updateAvailability(requestingUserId: number, targetUserId: number, dto: UpdateAvailabilityDto): Promise<{
-        id: number;
         name: string;
         email: string;
         avatar: string | null;
+        id: number;
         availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
     }>;
     updateAvatar(userId: number, targetUserId: number, avatarUrl: string): Promise<{
-        id: number;
         name: string;
-        role: import(".prisma/client").$Enums.UserRole;
         email: string;
         avatar: string | null;
+        id: number;
         availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
+        role: import(".prisma/client").$Enums.UserRole;
     }>;
     addUserSkill(userId: number, dto: AddUserSkillDto): Promise<{
         userId: number;
         created_at: Date;
-        updated_at: Date;
         id: number;
+        updated_at: Date;
         skillId: number;
         level: import(".prisma/client").$Enums.SkillLevel;
     }>;
     getUserSkills(userId: number): import(".prisma/client").Prisma.PrismaPromise<({
         skill: {
-            created_at: Date;
-            updated_at: Date;
-            id: number;
             name: string;
+            created_at: Date;
+            id: number;
+            updated_at: Date;
             description: string | null;
         };
     } & {
         userId: number;
         created_at: Date;
-        updated_at: Date;
         id: number;
+        updated_at: Date;
         skillId: number;
         level: import(".prisma/client").$Enums.SkillLevel;
     })[]>;
     updateUserSkill(userId: number, skillId: number, dto: UpdateUserSkillDto): Promise<{
         userId: number;
         created_at: Date;
-        updated_at: Date;
         id: number;
+        updated_at: Date;
         skillId: number;
         level: import(".prisma/client").$Enums.SkillLevel;
     }>;

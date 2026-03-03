@@ -7,7 +7,8 @@
       "name": "Alice Example",
       "email": "alice@example.com",
       "password": "Password123!"
-    }
+    },
+    "notes": "On success, backend also sets HTTP-only accessToken and refreshToken cookies."
   },
   {
     "name": "Auth - Login",
@@ -16,28 +17,32 @@
     "body": {
       "email": "alice@example.com",
       "password": "Password123!"
-    }
+    },
+    "notes": "On success, backend also sets HTTP-only accessToken and refreshToken cookies."
   },
   {
     "name": "Auth - Me (requires Bearer token)",
     "method": "GET",
     "url": "http://localhost:3000/api/auth/me",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
-    }
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
+    },
+    "notes": "If cookies are included (withCredentials), Authorization header can be omitted."
   },
   {
     "name": "Auth - Refresh Token",
     "method": "POST",
     "url": "http://localhost:3000/api/auth/refresh-token",
     "body": {
-      "refreshToken": "<REFRESH_TOKEN>"
-    }
+      "refreshToken": "<REFRESH_TOKEN (optional when using cookies)>"
+    },
+    "notes": "If refreshToken cookie is present, body field is optional."
   },
   {
     "name": "Auth - Logout",
     "method": "POST",
-    "url": "http://localhost:3000/api/auth/logout"
+    "url": "http://localhost:3000/api/auth/logout",
+    "notes": "Clears accessToken and refreshToken cookies on the client."
   },
   {
     "name": "Auth - Verify Email",
@@ -84,7 +89,7 @@
     "method": "GET",
     "url": "http://localhost:3000/api/users/1",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     }
   },
   {
@@ -92,7 +97,7 @@
     "method": "PUT",
     "url": "http://localhost:3000/api/users/profile",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     },
     "body": {
       "name": "Alice Updated"
@@ -103,7 +108,7 @@
     "method": "PATCH",
     "url": "http://localhost:3000/api/users/1/availability",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     },
     "body": {
       "availability_status": "busy"
@@ -114,7 +119,7 @@
     "method": "PATCH",
     "url": "http://localhost:3000/api/users/1/avatar",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>",
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)",
       "Content-Type": "multipart/form-data"
     },
     "body": {
@@ -127,7 +132,7 @@
     "method": "POST",
     "url": "http://localhost:3000/api/users/skills",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     },
     "body": {
       "skillId": 1,
@@ -144,7 +149,7 @@
     "method": "PATCH",
     "url": "http://localhost:3000/api/users/skills/1",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     },
     "body": {
       "level": "advanced"
@@ -155,7 +160,7 @@
     "method": "DELETE",
     "url": "http://localhost:3000/api/users/skills/1",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     }
   },
   {
@@ -163,7 +168,7 @@
     "method": "POST",
     "url": "http://localhost:3000/api/skills",
     "headers": {
-      "Authorization": "Bearer <ADMIN_ACCESS_TOKEN>"
+      "Authorization": "Bearer <ADMIN_ACCESS_TOKEN> (optional if cookies are sent with an admin user)"
     },
     "body": {
       "name": "TypeScript",
@@ -185,7 +190,7 @@
     "method": "DELETE",
     "url": "http://localhost:3000/api/skills/1",
     "headers": {
-      "Authorization": "Bearer <ADMIN_ACCESS_TOKEN>"
+      "Authorization": "Bearer <ADMIN_ACCESS_TOKEN> (optional if cookies are sent with an admin user)"
     }
   },
   {
@@ -193,7 +198,7 @@
     "method": "POST",
     "url": "http://localhost:3000/api/projects",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     },
     "body": {
       "title": "LUMEN Portfolio Site",
@@ -216,7 +221,7 @@
     "method": "PATCH",
     "url": "http://localhost:3000/api/projects/1",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     },
     "body": {
       "title": "LUMEN Portfolio Site v2",
@@ -229,7 +234,7 @@
     "method": "DELETE",
     "url": "http://localhost:3000/api/projects/1",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     }
   },
   {
@@ -237,7 +242,7 @@
     "method": "POST",
     "url": "http://localhost:3000/api/projects/1/join",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     }
   },
   {
@@ -245,7 +250,7 @@
     "method": "POST",
     "url": "http://localhost:3000/api/projects/1/invite",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     },
     "body": {
       "userId": 2
@@ -261,7 +266,7 @@
     "method": "POST",
     "url": "http://localhost:3000/api/projects/1/comment",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     },
     "body": {
       "content": "This looks great!"
@@ -277,7 +282,7 @@
     "method": "POST",
     "url": "http://localhost:3000/api/messages",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     },
     "body": {
       "receiverId": 2,
@@ -289,7 +294,7 @@
     "method": "GET",
     "url": "http://localhost:3000/api/messages/conversations",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     }
   },
   {
@@ -297,7 +302,7 @@
     "method": "GET",
     "url": "http://localhost:3000/api/messages/2",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     }
   },
   {
@@ -305,7 +310,7 @@
     "method": "POST",
     "url": "http://localhost:3000/api/advisories",
     "headers": {
-      "Authorization": "Bearer <ACCESS_TOKEN>"
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
     },
     "body": {
       "content": "Consider improving the onboarding flow.",
@@ -321,6 +326,166 @@
     "name": "Metrics - Get User Stats",
     "method": "GET",
     "url": "http://localhost:3000/api/users/1/stats"
+  },
+  
+  {
+    "name": "Notifications - List My Notifications",
+    "method": "GET",
+    "url": "http://localhost:3000/api/notifications",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
+    }
+  },
+  {
+    "name": "Notifications - Mark One As Read",
+    "method": "PATCH",
+    "url": "http://localhost:3000/api/notifications/1/read",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
+    }
+  },
+  {
+    "name": "Notifications - Mark All As Read",
+    "method": "PATCH",
+    "url": "http://localhost:3000/api/notifications/read-all",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
+    }
+  },
+  {
+    "name": "Notifications - Get Preferences",
+    "method": "GET",
+    "url": "http://localhost:3000/api/notifications/preferences",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
+    }
+  },
+  {
+    "name": "Notifications - Update Preferences (snooze all)",
+    "method": "PATCH",
+    "url": "http://localhost:3000/api/notifications/preferences",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "emailEnabled": false,
+      "inAppEnabled": false,
+      "snoozeUntil": "2099-01-01T00:00:00.000Z"
+    },
+    "notes": "Disables both in-app notifications and emails until the snoozeUntil timestamp."
+  },
+  {
+    "name": "Notifications - Clear Snooze but Keep Disabled",
+    "method": "PATCH",
+    "url": "http://localhost:3000/api/notifications/preferences",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)",
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "snoozeUntil": null
+    },
+    "notes": "Clears the snooze window while keeping existing emailEnabled/inAppEnabled flags."
+  },
+  {
+    "name": "Hiring - Public Job List",
+    "method": "GET",
+    "url": "http://localhost:3000/api/jobs",
+    "params": {
+      "skillId": "1",
+      "location": "remote",
+      "employment_type": "internship"
+    }
+  },
+  {
+    "name": "Hiring - Get Job By Id",
+    "method": "GET",
+    "url": "http://localhost:3000/api/jobs/1"
+  },
+  {
+    "name": "Hiring - Recruiter Create Job",
+    "method": "POST",
+    "url": "http://localhost:3000/api/jobs",
+    "headers": {
+      "Authorization": "Bearer <RECRUITER_ACCESS_TOKEN>"
+    },
+    "body": {
+      "title": "Frontend Internship",
+      "description": "Work on LUMEN UI components.",
+      "location": "Remote",
+      "employment_type": "internship",
+      "skillId": 1
+    }
+  },
+  {
+    "name": "Hiring - Recruiter List Own Jobs",
+    "method": "GET",
+    "url": "http://localhost:3000/api/jobs/my/list",
+    "headers": {
+      "Authorization": "Bearer <RECRUITER_ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Hiring - Recruiter Update Job",
+    "method": "PATCH",
+    "url": "http://localhost:3000/api/jobs/1",
+    "headers": {
+      "Authorization": "Bearer <RECRUITER_ACCESS_TOKEN>"
+    },
+    "body": {
+      "title": "Frontend Internship (Updated)",
+      "status": "open"
+    }
+  },
+  {
+    "name": "Hiring - Recruiter Close Job",
+    "method": "DELETE",
+    "url": "http://localhost:3000/api/jobs/1",
+    "headers": {
+      "Authorization": "Bearer <RECRUITER_ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Hiring - Candidate Apply To Job (with CV upload)",
+    "method": "POST",
+    "url": "http://localhost:3000/api/jobs/1/apply",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)",
+      "Content-Type": "multipart/form-data"
+    },
+    "body": {
+      "cover_letter": "I am very interested in this opportunity.",
+      "file": "<attach local CV file in your HTTP client>"
+    },
+    "notes": "Use multipart/form-data with a file field named 'file'. Backend uploads CV to Cloudinary and stores the public URL."
+  },
+  {
+    "name": "Hiring - Candidate List My Applications",
+    "method": "GET",
+    "url": "http://localhost:3000/api/me/applications",
+    "headers": {
+      "Authorization": "Bearer <ACCESS_TOKEN> (optional if cookies are sent)"
+    }
+  },
+  {
+    "name": "Hiring - Recruiter List Job Applications",
+    "method": "GET",
+    "url": "http://localhost:3000/api/jobs/1/applications",
+    "headers": {
+      "Authorization": "Bearer <RECRUITER_ACCESS_TOKEN>"
+    }
+  },
+  {
+    "name": "Hiring - Recruiter Update Application Status",
+    "method": "PATCH",
+    "url": "http://localhost:3000/api/applications/1/status",
+    "headers": {
+      "Authorization": "Bearer <RECRUITER_ACCESS_TOKEN>"
+    },
+    "body": {
+      "status": "shortlisted"
+    }
   }
 ]
 

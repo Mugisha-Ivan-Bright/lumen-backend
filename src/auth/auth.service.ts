@@ -9,6 +9,8 @@ import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { randomBytes } from 'crypto';
 import { EmailService } from '../email/email.service';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationType } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +19,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly emailService: EmailService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -43,6 +46,12 @@ export class AuthService {
     });
 
     await this.emailService.sendVerificationEmail(created.email, verificationToken);
+    await this.notificationsService.createNotification(
+      created.id,
+      NotificationType.EMAIL_VERIFICATION_SENT,
+      'Verify your email',
+      'Please verify your email address to activate your LUMEN account.',
+    );
 
     const user = {
       id: created.id,
@@ -98,31 +107,37 @@ export class AuthService {
   }
 
   private async generateTokens(userId: number, email: string, role: string) {
-    // Explicitly type payload as Record<string, unknown> to satisfy TS
-    const payload: { sub: number, email: string, role: string} = { sub: userId, email, role };
-  
-    const accessSecret = this.configService.get<string>('JWT_SECRET') ?? 'dev_jwt_secret';
-    const accessExpiresIn = this.configService.get<string>('JWT_EXPIRES_IN') ?? '15m';
-  
-    const refreshSecret = this.configService.get<string>('JWT_REFRESH_SECRET') ?? 'dev_jwt_refresh_secret';
-    const refreshExpiresIn = this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') ?? '7d';
-  
-    const accessToken = await this.jwtService.signAsync(payload as Record<string, unknown>, {
+    const payload = { sub: userId, email, role };
+
+    const accessSecret =
+      this.configService.get<string>('JWT_SECRET') ?? 'dev_jwt_secret';
+    const accessExpiresConfig =
+      this.configService.get<string>('JWT_EXPIRES_IN') ?? '15m';
+
+    const refreshSecret =
+      this.configService.get<string>('JWT_REFRESH_SECRET') ??
+      'dev_jwt_refresh_secret';
+    const refreshExpiresConfig =
+      this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') ?? '7d';
+
+    const accessOptions: JwtSignOptions = {
       secret: accessSecret,
-      expiresIn: accessExpiresIn,
-    } as JwtSignOptions);
-  
-    const refreshToken = await this.jwtService.signAsync(payload as Record<string, unknown>, {
-      secret: refreshSecret,  
-      expiresIn: refreshExpiresIn,
-    } as JwtSignOptions);
-  
+      expiresIn: accessExpiresConfig as JwtSignOptions['expiresIn'],
+    };
+
+    const refreshOptions: JwtSignOptions = {
+      secret: refreshSecret,
+      expiresIn: refreshExpiresConfig as JwtSignOptions['expiresIn'],
+    };
+
+    const accessToken = await this.jwtService.signAsync(payload, accessOptions);
+    const refreshToken = await this.jwtService.signAsync(payload, refreshOptions);
+
     return {
       accessToken,
       refreshToken,
     };
   }
-  
 
   async me(userId: number) {
     return this.prisma.user.findUnique({
@@ -166,7 +181,7 @@ export class AuthService {
       throw new BadRequestException('Invalid or expired verification token');
     }
 
-    await this.prisma.user.update({
+    const updated = await this.prisma.user.update({
       where: { id: user.id },
       data: {
         is_verified: true,
@@ -174,6 +189,27 @@ export class AuthService {
         verification_token_expires: null,
       },
     });
+
+    // In-app notifications (respect user in-app prefs)
+    await this.notificationsService.createNotification(
+      updated.id,
+      NotificationType.EMAIL_VERIFIED,
+      'Email verified',
+      'Your email has been successfully verified.',
+    );
+    await this.notificationsService.createNotification(
+      updated.id,
+      NotificationType.WELCOME,
+      'Welcome to LUMEN',
+      'Your account is now fully active. Start exploring projects, skills, and jobs.',
+    );
+
+    // Emails (respect email prefs and snooze)
+    const emailAllowed = await this.notificationsService.isEmailEnabled(updated.id);
+    if (emailAllowed) {
+      await this.emailService.sendEmailVerifiedEmail(updated.email, updated.name);
+      await this.emailService.sendWelcomeEmail(updated.email, updated.name);
+    }
 
     return { message: 'Email verified successfully' };
   }

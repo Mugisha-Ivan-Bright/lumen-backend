@@ -10,6 +10,7 @@ exports.AdvisoriesModule = void 0;
 const common_1 = require("@nestjs/common");
 const advisories_service_1 = require("./advisories.service");
 const advisories_controller_1 = require("./advisories.controller");
+const email_module_1 = require("../email/email.module");
 let AdvisoriesModule = class AdvisoriesModule {
 };
 exports.AdvisoriesModule = AdvisoriesModule;
@@ -17,6 +18,7 @@ exports.AdvisoriesModule = AdvisoriesModule = __decorate([
     (0, common_1.Module)({
         providers: [advisories_service_1.AdvisoriesService],
         controllers: [advisories_controller_1.AdvisoriesController],
+        imports: [email_module_1.EmailModule],
     })
 ], AdvisoriesModule);
 //# sourceMappingURL=advisories.module.js.map

@@ -4,10 +4,11 @@ import { LoginDto } from './dtos/login.dto';
 import { ResendVerificationDto } from './dtos/resend-verification.dto';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { ResetPasswordDto } from './dtos/reset-password.dto';
+import { Response, Request } from 'express';
 export declare class AuthController {
     private readonly authService;
     constructor(authService: AuthService);
-    register(dto: RegisterDto): Promise<{
+    register(dto: RegisterDto, res: Response): Promise<{
         accessToken: string;
         refreshToken: string;
         user: {
@@ -19,7 +20,7 @@ export declare class AuthController {
             is_verified: boolean;
         };
     }>;
-    login(dto: LoginDto): Promise<{
+    login(dto: LoginDto, res: Response): Promise<{
         accessToken: string;
         refreshToken: string;
         user: {
@@ -35,17 +36,17 @@ export declare class AuthController {
         name: string;
         email: string;
         avatar: string | null;
+        created_at: Date;
+        id: number;
         availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
         role: import(".prisma/client").$Enums.UserRole;
         is_verified: boolean;
-        created_at: Date;
-        id: number;
     } | null>;
-    refresh(refreshToken: string): Promise<{
+    refresh(req: Request, refreshToken: string, res: Response): Promise<{
         accessToken: string;
         refreshToken: string;
     }>;
-    logout(): Promise<{
+    logout(res: Response): Promise<{
         message: string;
     }>;
     verifyEmail(token: string): Promise<{

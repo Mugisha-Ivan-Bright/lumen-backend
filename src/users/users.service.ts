@@ -4,10 +4,17 @@ import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { UpdateAvailabilityDto } from './dtos/update-availability.dto';
 import { AddUserSkillDto } from './dtos/add-user-skill.dto';
 import { UpdateUserSkillDto } from './dtos/update-user-skill.dto';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationType } from '@prisma/client';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+    private readonly emailService: EmailService,
+  ) {}
 
   async getTalentList() {
     return this.prisma.user.findMany({
@@ -113,13 +120,30 @@ export class UsersService {
   }
 
   async addUserSkill(userId: number, dto: AddUserSkillDto) {
-    return this.prisma.userSkill.create({
+    const userSkill = await this.prisma.userSkill.create({
       data: {
         userId,
         skillId: dto.skillId,
         level: dto.level,
       },
     });
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const skill = await this.prisma.skill.findUnique({ where: { id: dto.skillId } });
+    if (user && skill) {
+      await this.notificationsService.createNotification(
+        user.id,
+        NotificationType.SKILL_ADDED,
+        'New skill added',
+        `You added the skill ${skill.name}.`,
+        { skillId: skill.id },
+      );
+      const emailAllowed =
+        await this.notificationsService.isEmailEnabled(user.id);
+      if (emailAllowed) {
+        await this.emailService.sendSkillAddedEmail(user.email, skill.name);
+      }
+    }
+    return userSkill;
   }
 
   getUserSkills(userId: number) {

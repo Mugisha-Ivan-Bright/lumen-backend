@@ -1,0 +1,1 @@
+{"version":3,"file":"create-job.dto.d.ts","sourceRoot":"","sources":["../../../src/hiring/dtos/create-job.dto.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,MAAM,gBAAgB,CAAC;AAGhD,qBAAa,YAAY;IAGvB,KAAK,EAAE,MAAM,CAAC;IAId,WAAW,CAAC,EAAE,MAAM,CAAC;IAIrB,QAAQ,CAAC,EAAE,MAAM,CAAC;IAGlB,eAAe,EAAE,cAAc,CAAC;IAIhC,OAAO,CAAC,EAAE,MAAM,CAAC;CAClB"}

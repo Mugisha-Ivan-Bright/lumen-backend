@@ -19,6 +19,8 @@ const projects_module_1 = require("./projects/projects.module");
 const messages_module_1 = require("./messages/messages.module");
 const advisories_module_1 = require("./advisories/advisories.module");
 const metrics_module_1 = require("./metrics/metrics.module");
+const hiring_module_1 = require("./hiring/hiring.module");
+const notifications_module_1 = require("./notifications/notifications.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -37,6 +39,8 @@ exports.AppModule = AppModule = __decorate([
             messages_module_1.MessagesModule,
             advisories_module_1.AdvisoriesModule,
             metrics_module_1.MetricsModule,
+            hiring_module_1.HiringModule,
+            notifications_module_1.NotificationsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

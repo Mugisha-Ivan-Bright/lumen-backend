@@ -3,9 +3,9 @@ export declare class MessagesService {
     private readonly prisma;
     constructor(prisma: PrismaService);
     sendMessage(senderId: number, receiverId: number, content: string): import(".prisma/client").Prisma.Prisma__MessageClient<{
-        content: string;
         created_at: Date;
         id: number;
+        content: string;
         read_status: boolean;
         senderId: number;
         receiverId: number;
@@ -15,9 +15,9 @@ export declare class MessagesService {
         user: any;
     }[]>;
     getConversation(userId: number, otherUserId: number): import(".prisma/client").Prisma.PrismaPromise<{
-        content: string;
         created_at: Date;
         id: number;
+        content: string;
         read_status: boolean;
         senderId: number;
         receiverId: number;

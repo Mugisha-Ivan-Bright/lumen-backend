@@ -50,12 +50,15 @@ const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
 const crypto_1 = require("crypto");
 const email_service_1 = require("../email/email.service");
+const notifications_service_1 = require("../notifications/notifications.service");
+const client_1 = require("@prisma/client");
 let AuthService = class AuthService {
-    constructor(prisma, jwtService, configService, emailService) {
+    constructor(prisma, jwtService, configService, emailService, notificationsService) {
         this.prisma = prisma;
         this.jwtService = jwtService;
         this.configService = configService;
         this.emailService = emailService;
+        this.notificationsService = notificationsService;
     }
     async register(dto) {
         const existing = await this.prisma.user.findUnique({
@@ -78,6 +81,7 @@ let AuthService = class AuthService {
             },
         });
         await this.emailService.sendVerificationEmail(created.email, verificationToken);
+        await this.notificationsService.createNotification(created.id, client_1.NotificationType.EMAIL_VERIFICATION_SENT, 'Verify your email', 'Please verify your email address to activate your LUMEN account.');
         const user = {
             id: created.id,
             name: created.name,
@@ -120,17 +124,19 @@ let AuthService = class AuthService {
         var _a, _b, _c, _d;
         const payload = { sub: userId, email, role };
         const accessSecret = (_a = this.configService.get('JWT_SECRET')) !== null && _a !== void 0 ? _a : 'dev_jwt_secret';
-        const accessExpiresIn = (_b = this.configService.get('JWT_EXPIRES_IN')) !== null && _b !== void 0 ? _b : '15m';
+        const accessExpiresConfig = (_b = this.configService.get('JWT_EXPIRES_IN')) !== null && _b !== void 0 ? _b : '15m';
         const refreshSecret = (_c = this.configService.get('JWT_REFRESH_SECRET')) !== null && _c !== void 0 ? _c : 'dev_jwt_refresh_secret';
-        const refreshExpiresIn = (_d = this.configService.get('JWT_REFRESH_EXPIRES_IN')) !== null && _d !== void 0 ? _d : '7d';
-        const accessToken = await this.jwtService.signAsync(payload, {
+        const refreshExpiresConfig = (_d = this.configService.get('JWT_REFRESH_EXPIRES_IN')) !== null && _d !== void 0 ? _d : '7d';
+        const accessOptions = {
             secret: accessSecret,
-            expiresIn: accessExpiresIn,
-        });
-        const refreshToken = await this.jwtService.signAsync(payload, {
+            expiresIn: accessExpiresConfig,
+        };
+        const refreshOptions = {
             secret: refreshSecret,
-            expiresIn: refreshExpiresIn,
-        });
+            expiresIn: refreshExpiresConfig,
+        };
+        const accessToken = await this.jwtService.signAsync(payload, accessOptions);
+        const refreshToken = await this.jwtService.signAsync(payload, refreshOptions);
         return {
             accessToken,
             refreshToken,
@@ -175,7 +181,7 @@ let AuthService = class AuthService {
         if (!user) {
             throw new common_1.BadRequestException('Invalid or expired verification token');
         }
-        await this.prisma.user.update({
+        const updated = await this.prisma.user.update({
             where: { id: user.id },
             data: {
                 is_verified: true,
@@ -183,6 +189,13 @@ let AuthService = class AuthService {
                 verification_token_expires: null,
             },
         });
+        await this.notificationsService.createNotification(updated.id, client_1.NotificationType.EMAIL_VERIFIED, 'Email verified', 'Your email has been successfully verified.');
+        await this.notificationsService.createNotification(updated.id, client_1.NotificationType.WELCOME, 'Welcome to LUMEN', 'Your account is now fully active. Start exploring projects, skills, and jobs.');
+        const emailAllowed = await this.notificationsService.isEmailEnabled(updated.id);
+        if (emailAllowed) {
+            await this.emailService.sendEmailVerifiedEmail(updated.email, updated.name);
+            await this.emailService.sendWelcomeEmail(updated.email, updated.name);
+        }
         return { message: 'Email verified successfully' };
     }
     async resendVerificationEmail(email) {
@@ -262,6 +275,7 @@ exports.AuthService = AuthService = __decorate([
     __metadata("design:paramtypes", [prisma_service_1.PrismaService,
         jwt_1.JwtService,
         config_1.ConfigService,
-        email_service_1.EmailService])
+        email_service_1.EmailService,
+        notifications_service_1.NotificationsService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

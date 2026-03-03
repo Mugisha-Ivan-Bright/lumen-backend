@@ -6,92 +6,92 @@ export declare class ProjectsController {
     private readonly projectsService;
     constructor(projectsService: ProjectsService);
     create(req: any, dto: CreateProjectDto): import(".prisma/client").Prisma.Prisma__ProjectClient<{
-        createdById: number;
-        created_at: Date;
-        updated_at: Date;
-        id: number;
         title: string;
+        created_at: Date;
+        id: number;
+        updated_at: Date;
+        skillId: number | null;
         description: string | null;
         status: import(".prisma/client").$Enums.ProjectStatus;
-        skillId: number | null;
+        createdById: number;
     }, never, import("@prisma/client/runtime/client").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
     getAll(): import(".prisma/client").Prisma.PrismaPromise<({
-        created_by: {
-            created_at: Date;
-            updated_at: Date;
-            id: number;
+        skill: {
             name: string;
-            role: import(".prisma/client").$Enums.UserRole;
+            created_at: Date;
+            id: number;
+            updated_at: Date;
+            description: string | null;
+        } | null;
+        created_by: {
+            name: string;
             email: string;
             password: string;
             avatar: string | null;
+            created_at: Date;
+            id: number;
             availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
+            role: import(".prisma/client").$Enums.UserRole;
             is_verified: boolean;
             verification_token: string | null;
             verification_token_expires: Date | null;
             reset_password_token: string | null;
             reset_password_expires: Date | null;
-        };
-        skill: {
-            created_at: Date;
             updated_at: Date;
-            id: number;
-            name: string;
-            description: string | null;
-        } | null;
+        };
     } & {
-        createdById: number;
-        created_at: Date;
-        updated_at: Date;
-        id: number;
         title: string;
+        created_at: Date;
+        id: number;
+        updated_at: Date;
+        skillId: number | null;
         description: string | null;
         status: import(".prisma/client").$Enums.ProjectStatus;
-        skillId: number | null;
+        createdById: number;
     })[]>;
     getById(id: number): Promise<{
-        created_by: {
-            created_at: Date;
-            updated_at: Date;
-            id: number;
+        skill: {
             name: string;
-            role: import(".prisma/client").$Enums.UserRole;
+            created_at: Date;
+            id: number;
+            updated_at: Date;
+            description: string | null;
+        } | null;
+        created_by: {
+            name: string;
             email: string;
             password: string;
             avatar: string | null;
+            created_at: Date;
+            id: number;
             availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
+            role: import(".prisma/client").$Enums.UserRole;
             is_verified: boolean;
             verification_token: string | null;
             verification_token_expires: Date | null;
             reset_password_token: string | null;
             reset_password_expires: Date | null;
-        };
-        skill: {
-            created_at: Date;
             updated_at: Date;
-            id: number;
-            name: string;
-            description: string | null;
-        } | null;
+        };
     } & {
-        createdById: number;
-        created_at: Date;
-        updated_at: Date;
-        id: number;
         title: string;
+        created_at: Date;
+        id: number;
+        updated_at: Date;
+        skillId: number | null;
         description: string | null;
         status: import(".prisma/client").$Enums.ProjectStatus;
-        skillId: number | null;
+        createdById: number;
     }>;
     update(req: any, id: number, dto: UpdateProjectDto): Promise<{
-        createdById: number;
-        created_at: Date;
-        updated_at: Date;
-        id: number;
         title: string;
+        created_at: Date;
+        id: number;
+        updated_at: Date;
+        skillId: number | null;
         description: string | null;
         status: import(".prisma/client").$Enums.ProjectStatus;
-        skillId: number | null;
+        createdById: number;
     }>;
     remove(req: any, id: number): Promise<{
         message: string;
@@ -104,59 +104,59 @@ export declare class ProjectsController {
     }>;
     members(id: number): import(".prisma/client").Prisma.PrismaPromise<({
         user: {
-            created_at: Date;
-            updated_at: Date;
-            id: number;
             name: string;
-            role: import(".prisma/client").$Enums.UserRole;
             email: string;
             password: string;
             avatar: string | null;
+            created_at: Date;
+            id: number;
             availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
+            role: import(".prisma/client").$Enums.UserRole;
             is_verified: boolean;
             verification_token: string | null;
             verification_token_expires: Date | null;
             reset_password_token: string | null;
             reset_password_expires: Date | null;
+            updated_at: Date;
         };
     } & {
         userId: number;
         id: number;
-        projectId: number;
         role: import(".prisma/client").$Enums.ProjectMemberRole;
         joined_at: Date;
-    })[]>;
-    comment(req: any, id: number, dto: CreateCommentDto): import(".prisma/client").Prisma.Prisma__ProjectCommentClient<{
-        userId: number;
-        content: string;
-        created_at: Date;
-        updated_at: Date;
-        id: number;
         projectId: number;
-    }, never, import("@prisma/client/runtime/client").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
+    })[]>;
+    comment(req: any, id: number, dto: CreateCommentDto): Promise<{
+        userId: number;
+        created_at: Date;
+        id: number;
+        updated_at: Date;
+        content: string;
+        projectId: number;
+    }>;
     comments(id: number): import(".prisma/client").Prisma.PrismaPromise<({
         user: {
-            created_at: Date;
-            updated_at: Date;
-            id: number;
             name: string;
-            role: import(".prisma/client").$Enums.UserRole;
             email: string;
             password: string;
             avatar: string | null;
+            created_at: Date;
+            id: number;
             availability_status: import(".prisma/client").$Enums.AvailabilityStatus;
+            role: import(".prisma/client").$Enums.UserRole;
             is_verified: boolean;
             verification_token: string | null;
             verification_token_expires: Date | null;
             reset_password_token: string | null;
             reset_password_expires: Date | null;
+            updated_at: Date;
         };
     } & {
         userId: number;
-        content: string;
         created_at: Date;
-        updated_at: Date;
         id: number;
+        updated_at: Date;
+        content: string;
         projectId: number;
     })[]>;
 }

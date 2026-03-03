@@ -12,9 +12,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProjectsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const notifications_service_1 = require("../notifications/notifications.service");
+const client_1 = require("@prisma/client");
+const email_service_1 = require("../email/email.service");
 let ProjectsService = class ProjectsService {
-    constructor(prisma) {
+    constructor(prisma, notificationsService, emailService) {
         this.prisma = prisma;
+        this.notificationsService = notificationsService;
+        this.emailService = emailService;
     }
     createProject(ownerId, dto) {
         return this.prisma.project.create({
@@ -121,14 +126,26 @@ let ProjectsService = class ProjectsService {
             },
         });
     }
-    addComment(userId, projectId, dto) {
-        return this.prisma.projectComment.create({
+    async addComment(userId, projectId, dto) {
+        const comment = await this.prisma.projectComment.create({
             data: {
                 projectId,
                 userId,
                 content: dto.content,
             },
         });
+        const project = await this.prisma.project.findUnique({
+            where: { id: projectId },
+            include: { created_by: true },
+        });
+        if (project) {
+            await this.notificationsService.createNotification(project.createdById, client_1.NotificationType.COMMENT_RECEIVED, 'New comment on your project', `Your project "${project.title}" received a new comment.`, { projectId });
+            const emailAllowed = await this.notificationsService.isEmailEnabled(project.createdById);
+            if (emailAllowed) {
+                await this.emailService.sendCommentReceivedEmail(project.created_by.email, project.title);
+            }
+        }
+        return comment;
     }
     getComments(projectId) {
         return this.prisma.projectComment.findMany({
@@ -142,6 +159,8 @@ let ProjectsService = class ProjectsService {
 exports.ProjectsService = ProjectsService;
 exports.ProjectsService = ProjectsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        notifications_service_1.NotificationsService,
+        email_service_1.EmailService])
 ], ProjectsService);
 //# sourceMappingURL=projects.service.js.map

@@ -3,10 +3,17 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateProjectDto } from './dtos/create-project.dto';
 import { UpdateProjectDto } from './dtos/update-project.dto';
 import { CreateCommentDto } from './dtos/create-comment.dto';
+import { NotificationsService } from '../notifications/notifications.service';
+import { NotificationType } from '@prisma/client';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly notificationsService: NotificationsService,
+    private readonly emailService: EmailService,
+  ) {}
 
   createProject(ownerId: number, dto: CreateProjectDto) {
     return this.prisma.project.create({
@@ -121,14 +128,36 @@ export class ProjectsService {
     });
   }
 
-  addComment(userId: number, projectId: number, dto: CreateCommentDto) {
-    return this.prisma.projectComment.create({
+  async addComment(userId: number, projectId: number, dto: CreateCommentDto) {
+    const comment = await this.prisma.projectComment.create({
       data: {
         projectId,
         userId,
         content: dto.content,
       },
     });
+    const project = await this.prisma.project.findUnique({
+      where: { id: projectId },
+      include: { created_by: true },
+    });
+    if (project) {
+      await this.notificationsService.createNotification(
+        project.createdById,
+        NotificationType.COMMENT_RECEIVED,
+        'New comment on your project',
+        `Your project "${project.title}" received a new comment.`,
+        { projectId },
+      );
+      const emailAllowed =
+        await this.notificationsService.isEmailEnabled(project.createdById);
+      if (emailAllowed) {
+        await this.emailService.sendCommentReceivedEmail(
+          project.created_by.email,
+          project.title,
+        );
+      }
+    }
+    return comment;
   }
 
   getComments(projectId: number) {
