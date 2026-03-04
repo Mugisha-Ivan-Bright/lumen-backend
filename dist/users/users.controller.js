@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const update_profile_dto_1 = require("./dtos/update-profile.dto");
 const update_availability_dto_1 = require("./dtos/update-availability.dto");
+const change_password_dto_1 = require("./dtos/change-password.dto");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const add_user_skill_dto_1 = require("./dtos/add-user-skill.dto");
 const update_user_skill_dto_1 = require("./dtos/update-user-skill.dto");
@@ -57,6 +58,9 @@ let UsersController = class UsersController {
     }
     deleteUserSkill(req, skillId) {
         return this.usersService.deleteUserSkill(req.user.userId, skillId);
+    }
+    changePassword(req, dto) {
+        return this.usersService.changePassword(req.user.userId, dto);
     }
 };
 exports.UsersController = UsersController;
@@ -146,6 +150,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, Number]),
     __metadata("design:returntype", void 0)
 ], UsersController.prototype, "deleteUserSkill", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.Patch)('users/password'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, change_password_dto_1.ChangePasswordDto]),
+    __metadata("design:returntype", void 0)
+], UsersController.prototype, "changePassword", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)(),
     __metadata("design:paramtypes", [users_service_1.UsersService,

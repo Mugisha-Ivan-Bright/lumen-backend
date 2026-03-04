@@ -21,6 +21,8 @@ const advisories_module_1 = require("./advisories/advisories.module");
 const metrics_module_1 = require("./metrics/metrics.module");
 const hiring_module_1 = require("./hiring/hiring.module");
 const notifications_module_1 = require("./notifications/notifications.module");
+const websocket_module_1 = require("./websocket/websocket.module");
+const admin_module_1 = require("./admin/admin.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -41,6 +43,8 @@ exports.AppModule = AppModule = __decorate([
             metrics_module_1.MetricsModule,
             hiring_module_1.HiringModule,
             notifications_module_1.NotificationsModule,
+            websocket_module_1.WebSocketModule,
+            admin_module_1.AdminModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

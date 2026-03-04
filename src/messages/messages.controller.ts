@@ -4,7 +4,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @Controller('messages')
 export class MessagesController {
-  constructor(private readonly messagesService: MessagesService) {}
+  constructor(private readonly messagesService: MessagesService) { }
 
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -12,8 +12,18 @@ export class MessagesController {
     @Req() req: any,
     @Body('receiverId', ParseIntPipe) receiverId: number,
     @Body('content') content: string,
+    @Body('fileUrl') fileUrl?: string,
+    @Body('fileName') fileName?: string,
+    @Body('fileType') fileType?: string,
   ) {
-    return this.messagesService.sendMessage(req.user.userId, receiverId, content);
+    return this.messagesService.sendMessage(
+      req.user.userId,
+      receiverId,
+      content,
+      fileUrl,
+      fileName,
+      fileType,
+    );
   }
 
   @UseGuards(JwtAuthGuard)

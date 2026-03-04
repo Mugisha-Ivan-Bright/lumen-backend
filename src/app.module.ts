@@ -12,6 +12,8 @@ import { AdvisoriesModule } from './advisories/advisories.module';
 import { MetricsModule } from './metrics/metrics.module';
 import { HiringModule } from './hiring/hiring.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { WebSocketModule } from './websocket/websocket.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -29,9 +31,11 @@ import { NotificationsModule } from './notifications/notifications.module';
     MetricsModule,
     HiringModule,
     NotificationsModule,
+    WebSocketModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
 

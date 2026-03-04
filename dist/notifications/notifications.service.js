@@ -12,9 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const websocket_gateway_1 = require("../websocket/websocket.gateway");
 let NotificationsService = class NotificationsService {
-    constructor(prisma) {
+    constructor(prisma, websocketGateway) {
         this.prisma = prisma;
+        this.websocketGateway = websocketGateway;
     }
     async getPreferences(userId) {
         let prefs = await this.prisma.notificationPreference.findUnique({
@@ -48,7 +50,7 @@ let NotificationsService = class NotificationsService {
         if (!allowed) {
             return null;
         }
-        return this.prisma.notification.create({
+        const notification = await this.prisma.notification.create({
             data: {
                 userId,
                 type,
@@ -57,6 +59,8 @@ let NotificationsService = class NotificationsService {
                 data,
             },
         });
+        this.websocketGateway.sendNotificationToUser(userId, notification);
+        return notification;
     }
     listForUser(userId) {
         return this.prisma.notification.findMany({
@@ -106,6 +110,7 @@ let NotificationsService = class NotificationsService {
 exports.NotificationsService = NotificationsService;
 exports.NotificationsService = NotificationsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        websocket_gateway_1.WebSocketGatewayService])
 ], NotificationsService);
 //# sourceMappingURL=notifications.service.js.map

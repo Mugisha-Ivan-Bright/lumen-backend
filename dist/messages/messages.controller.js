@@ -20,8 +20,8 @@ let MessagesController = class MessagesController {
     constructor(messagesService) {
         this.messagesService = messagesService;
     }
-    send(req, receiverId, content) {
-        return this.messagesService.sendMessage(req.user.userId, receiverId, content);
+    send(req, receiverId, content, fileUrl, fileName, fileType) {
+        return this.messagesService.sendMessage(req.user.userId, receiverId, content, fileUrl, fileName, fileType);
     }
     conversations(req) {
         return this.messagesService.getConversations(req.user.userId);
@@ -37,8 +37,11 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)('receiverId', common_1.ParseIntPipe)),
     __param(2, (0, common_1.Body)('content')),
+    __param(3, (0, common_1.Body)('fileUrl')),
+    __param(4, (0, common_1.Body)('fileName')),
+    __param(5, (0, common_1.Body)('fileType')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Number, String]),
+    __metadata("design:paramtypes", [Object, Number, String, String, String, String]),
     __metadata("design:returntype", void 0)
 ], MessagesController.prototype, "send", null);
 __decorate([

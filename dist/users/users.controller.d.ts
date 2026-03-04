@@ -1,6 +1,7 @@
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { UpdateAvailabilityDto } from './dtos/update-availability.dto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
 import { AddUserSkillDto } from './dtos/add-user-skill.dto';
 import { UpdateUserSkillDto } from './dtos/update-user-skill.dto';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
@@ -75,10 +76,10 @@ export declare class UsersController {
     getUserSkills(id: number): import(".prisma/client").Prisma.PrismaPromise<({
         skill: {
             name: string;
+            description: string | null;
             created_at: Date;
             id: number;
             updated_at: Date;
-            description: string | null;
         };
     } & {
         userId: number;
@@ -97,6 +98,9 @@ export declare class UsersController {
         level: import(".prisma/client").$Enums.SkillLevel;
     }>;
     deleteUserSkill(req: any, skillId: number): Promise<{
+        message: string;
+    }>;
+    changePassword(req: any, dto: ChangePasswordDto): Promise<{
         message: string;
     }>;
 }

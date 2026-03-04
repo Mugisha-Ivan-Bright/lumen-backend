@@ -5,24 +5,24 @@ export declare class SkillsController {
     constructor(skillsService: SkillsService);
     getAll(): import(".prisma/client").Prisma.PrismaPromise<{
         name: string;
+        description: string | null;
         created_at: Date;
         id: number;
         updated_at: Date;
-        description: string | null;
     }[]>;
     getById(id: number): Promise<{
         name: string;
+        description: string | null;
         created_at: Date;
         id: number;
         updated_at: Date;
-        description: string | null;
     }>;
     create(dto: CreateSkillDto): import(".prisma/client").Prisma.Prisma__SkillClient<{
         name: string;
+        description: string | null;
         created_at: Date;
         id: number;
         updated_at: Date;
-        description: string | null;
     }, never, import("@prisma/client/runtime/client").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
     remove(id: number): Promise<{
         message: string;

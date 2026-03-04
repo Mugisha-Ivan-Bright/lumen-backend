@@ -1,12 +1,14 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { UpdateAvailabilityDto } from './dtos/update-availability.dto';
 import { AddUserSkillDto } from './dtos/add-user-skill.dto';
 import { UpdateUserSkillDto } from './dtos/update-user-skill.dto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
 import { NotificationsService } from '../notifications/notifications.service';
 import { NotificationType } from '@prisma/client';
 import { EmailService } from '../email/email.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +16,7 @@ export class UsersService {
     private readonly prisma: PrismaService,
     private readonly notificationsService: NotificationsService,
     private readonly emailService: EmailService,
-  ) {}
+  ) { }
 
   async getTalentList() {
     return this.prisma.user.findMany({
@@ -181,6 +183,36 @@ export class UsersService {
       });
     }
     return { message: 'User skill removed' };
+  }
+
+  async changePassword(userId: number, dto: ChangePasswordDto) {
+    // Get user with password
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Verify current password
+    const isPasswordValid = await bcrypt.compare(dto.currentPassword, user.password);
+    if (!isPasswordValid) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(dto.newPassword, 10);
+
+    // Update password
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return { message: 'Password changed successfully' };
   }
 }
 

@@ -1,18 +1,53 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { WebSocketGatewayService } from '../websocket/websocket.gateway';
 
 @Injectable()
 export class MessagesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly websocketGateway: WebSocketGatewayService,
+  ) { }
 
-  sendMessage(senderId: number, receiverId: number, content: string) {
-    return this.prisma.message.create({
+  async sendMessage(
+    senderId: number,
+    receiverId: number,
+    content: string,
+    fileUrl?: string,
+    fileName?: string,
+    fileType?: string,
+  ) {
+    const message = await this.prisma.message.create({
       data: {
         senderId,
         receiverId,
         content,
+        file_url: fileUrl,
+        file_name: fileName,
+        file_type: fileType,
+      },
+      include: {
+        sender: {
+          select: {
+            id: true,
+            name: true,
+            avatar: true,
+          },
+        },
+        receiver: {
+          select: {
+            id: true,
+            name: true,
+            avatar: true,
+          },
+        },
       },
     });
+
+    // Emit WebSocket event to receiver
+    this.websocketGateway.sendMessageToUser(receiverId, message);
+
+    return message;
   }
 
   async getConversations(userId: number) {

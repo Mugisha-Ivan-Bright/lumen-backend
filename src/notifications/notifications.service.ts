@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationType, Prisma } from '@prisma/client';
+import { WebSocketGatewayService } from '../websocket/websocket.gateway';
 
 @Injectable()
 export class NotificationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly websocketGateway: WebSocketGatewayService,
+  ) { }
 
   private async getPreferences(userId: number) {
     let prefs = await this.prisma.notificationPreference.findUnique({
@@ -51,7 +55,7 @@ export class NotificationsService {
       return null;
     }
 
-    return this.prisma.notification.create({
+    const notification = await this.prisma.notification.create({
       data: {
         userId,
         type,
@@ -60,6 +64,11 @@ export class NotificationsService {
         data,
       },
     });
+
+    // Emit WebSocket event to user
+    this.websocketGateway.sendNotificationToUser(userId, notification);
+
+    return notification;
   }
 
   listForUser(userId: number) {

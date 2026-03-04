@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Put, R
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dtos/update-profile.dto';
 import { UpdateAvailabilityDto } from './dtos/update-availability.dto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AddUserSkillDto } from './dtos/add-user-skill.dto';
 import { UpdateUserSkillDto } from './dtos/update-user-skill.dto';
@@ -13,7 +14,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly cloudinaryService: CloudinaryService,
-  ) {}
+  ) { }
 
   @Get('talent')
   getTalent() {
@@ -87,6 +88,12 @@ export class UsersController {
   @Delete('users/skills/:skillId')
   deleteUserSkill(@Req() req: any, @Param('skillId', ParseIntPipe) skillId: number) {
     return this.usersService.deleteUserSkill(req.user.userId, skillId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('users/password')
+  changePassword(@Req() req: any, @Body() dto: ChangePasswordDto) {
+    return this.usersService.changePassword(req.user.userId, dto);
   }
 }
 

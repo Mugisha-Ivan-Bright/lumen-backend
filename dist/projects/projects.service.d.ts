@@ -10,22 +10,22 @@ export declare class ProjectsService {
     private readonly emailService;
     constructor(prisma: PrismaService, notificationsService: NotificationsService, emailService: EmailService);
     createProject(ownerId: number, dto: CreateProjectDto): import(".prisma/client").Prisma.Prisma__ProjectClient<{
+        description: string | null;
         title: string;
         created_at: Date;
         id: number;
         updated_at: Date;
         skillId: number | null;
-        description: string | null;
         status: import(".prisma/client").$Enums.ProjectStatus;
         createdById: number;
     }, never, import("@prisma/client/runtime/client").DefaultArgs, import(".prisma/client").Prisma.PrismaClientOptions>;
     getProjects(): import(".prisma/client").Prisma.PrismaPromise<({
         skill: {
             name: string;
+            description: string | null;
             created_at: Date;
             id: number;
             updated_at: Date;
-            description: string | null;
         } | null;
         created_by: {
             name: string;
@@ -44,22 +44,22 @@ export declare class ProjectsService {
             updated_at: Date;
         };
     } & {
+        description: string | null;
         title: string;
         created_at: Date;
         id: number;
         updated_at: Date;
         skillId: number | null;
-        description: string | null;
         status: import(".prisma/client").$Enums.ProjectStatus;
         createdById: number;
     })[]>;
     getProjectById(id: number): Promise<{
         skill: {
             name: string;
+            description: string | null;
             created_at: Date;
             id: number;
             updated_at: Date;
-            description: string | null;
         } | null;
         created_by: {
             name: string;
@@ -78,22 +78,22 @@ export declare class ProjectsService {
             updated_at: Date;
         };
     } & {
+        description: string | null;
         title: string;
         created_at: Date;
         id: number;
         updated_at: Date;
         skillId: number | null;
-        description: string | null;
         status: import(".prisma/client").$Enums.ProjectStatus;
         createdById: number;
     }>;
     updateProject(userId: number, projectId: number, dto: UpdateProjectDto): Promise<{
+        description: string | null;
         title: string;
         created_at: Date;
         id: number;
         updated_at: Date;
         skillId: number | null;
-        description: string | null;
         status: import(".prisma/client").$Enums.ProjectStatus;
         createdById: number;
     }>;

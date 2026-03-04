@@ -12,18 +12,41 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MessagesService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
+const websocket_gateway_1 = require("../websocket/websocket.gateway");
 let MessagesService = class MessagesService {
-    constructor(prisma) {
+    constructor(prisma, websocketGateway) {
         this.prisma = prisma;
+        this.websocketGateway = websocketGateway;
     }
-    sendMessage(senderId, receiverId, content) {
-        return this.prisma.message.create({
+    async sendMessage(senderId, receiverId, content, fileUrl, fileName, fileType) {
+        const message = await this.prisma.message.create({
             data: {
                 senderId,
                 receiverId,
                 content,
+                file_url: fileUrl,
+                file_name: fileName,
+                file_type: fileType,
+            },
+            include: {
+                sender: {
+                    select: {
+                        id: true,
+                        name: true,
+                        avatar: true,
+                    },
+                },
+                receiver: {
+                    select: {
+                        id: true,
+                        name: true,
+                        avatar: true,
+                    },
+                },
             },
         });
+        this.websocketGateway.sendMessageToUser(receiverId, message);
+        return message;
     }
     async getConversations(userId) {
         const messages = await this.prisma.message.findMany({
@@ -59,6 +82,7 @@ let MessagesService = class MessagesService {
 exports.MessagesService = MessagesService;
 exports.MessagesService = MessagesService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        websocket_gateway_1.WebSocketGatewayService])
 ], MessagesService);
 //# sourceMappingURL=messages.service.js.map

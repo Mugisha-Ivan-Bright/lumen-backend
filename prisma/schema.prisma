@@ -181,6 +181,9 @@ model Message {
   id          Int      @id @default(autoincrement())
   content     String
   read_status Boolean  @default(false)
+  file_url    String?
+  file_name   String?
+  file_type   String?
   created_at  DateTime @default(now())
 
   sender   User @relation("MessagesSent", fields: [senderId], references: [id])

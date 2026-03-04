@@ -22,10 +22,10 @@ export declare class ApplicationsService {
             userSkills: ({
                 skill: {
                     name: string;
+                    description: string | null;
                     created_at: Date;
                     id: number;
                     updated_at: Date;
-                    description: string | null;
                 };
             } & {
                 userId: number;
@@ -73,12 +73,12 @@ export declare class ApplicationsService {
     }>;
     getMyApplications(candidateId: number): import(".prisma/client").Prisma.PrismaPromise<({
         job: {
+            description: string | null;
             title: string;
             created_at: Date;
             id: number;
             updated_at: Date;
             skillId: number | null;
-            description: string | null;
             status: import(".prisma/client").$Enums.JobStatus;
             createdById: number;
             location: string | null;

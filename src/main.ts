@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
-import cookieParser  = require('cookie-parser');
+import cookieParser = require('cookie-parser');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -19,7 +19,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: '*',
+    origin: process.env.APP_URL || "http://localhost:5173",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

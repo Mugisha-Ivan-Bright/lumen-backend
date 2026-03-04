@@ -1,8 +1,10 @@
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationType, Prisma } from '@prisma/client';
+import { WebSocketGatewayService } from '../websocket/websocket.gateway';
 export declare class NotificationsService {
     private readonly prisma;
-    constructor(prisma: PrismaService);
+    private readonly websocketGateway;
+    constructor(prisma: PrismaService, websocketGateway: WebSocketGatewayService);
     private getPreferences;
     isInAppEnabled(userId: number): Promise<boolean>;
     isEmailEnabled(userId: number): Promise<boolean>;

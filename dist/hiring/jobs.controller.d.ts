@@ -7,10 +7,10 @@ export declare class JobsController {
     listJobs(skillId?: string, location?: string, employment_type?: string): import(".prisma/client").Prisma.PrismaPromise<({
         skill: {
             name: string;
+            description: string | null;
             created_at: Date;
             id: number;
             updated_at: Date;
-            description: string | null;
         } | null;
         created_by: {
             name: string;
@@ -29,12 +29,12 @@ export declare class JobsController {
             updated_at: Date;
         };
     } & {
+        description: string | null;
         title: string;
         created_at: Date;
         id: number;
         updated_at: Date;
         skillId: number | null;
-        description: string | null;
         status: import(".prisma/client").$Enums.JobStatus;
         createdById: number;
         location: string | null;
@@ -43,10 +43,10 @@ export declare class JobsController {
     getJob(id: number): Promise<{
         skill: {
             name: string;
+            description: string | null;
             created_at: Date;
             id: number;
             updated_at: Date;
-            description: string | null;
         } | null;
         created_by: {
             name: string;
@@ -65,48 +65,48 @@ export declare class JobsController {
             updated_at: Date;
         };
     } & {
+        description: string | null;
         title: string;
         created_at: Date;
         id: number;
         updated_at: Date;
         skillId: number | null;
-        description: string | null;
         status: import(".prisma/client").$Enums.JobStatus;
         createdById: number;
         location: string | null;
         employment_type: import(".prisma/client").$Enums.EmploymentType;
     }>;
     createJob(req: any, dto: CreateJobDto): Promise<{
+        description: string | null;
         title: string;
         created_at: Date;
         id: number;
         updated_at: Date;
         skillId: number | null;
-        description: string | null;
         status: import(".prisma/client").$Enums.JobStatus;
         createdById: number;
         location: string | null;
         employment_type: import(".prisma/client").$Enums.EmploymentType;
     }>;
     myJobs(req: any): import(".prisma/client").Prisma.PrismaPromise<{
+        description: string | null;
         title: string;
         created_at: Date;
         id: number;
         updated_at: Date;
         skillId: number | null;
-        description: string | null;
         status: import(".prisma/client").$Enums.JobStatus;
         createdById: number;
         location: string | null;
         employment_type: import(".prisma/client").$Enums.EmploymentType;
     }[]>;
     updateJob(req: any, id: number, dto: UpdateJobDto): Promise<{
+        description: string | null;
         title: string;
         created_at: Date;
         id: number;
         updated_at: Date;
         skillId: number | null;
-        description: string | null;
         status: import(".prisma/client").$Enums.JobStatus;
         createdById: number;
         location: string | null;
